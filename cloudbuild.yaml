@@ -1,0 +1,17 @@
+steps:
+
+- name: 'gcr.io/kaniko-project/executor:latest'
+  - --dockerfile=Dockerfile
+  - --context=.
+  - --destination=gcr.io/$PROJECT_ID/${_IMAGE_NAME}:$SHORT_SHA
+  - --destination=gcr.io/$PROJECT_ID/${_IMAGE_NAME}:latest
+  - --cache=true
+  waitFor: ['-']
+
+substitutions:
+  _IMAGE_NAME: ml/first
+
+images: [
+  'gcr.io/$PROJECT_ID/${_IMAGE_NAME}:latest',
+  'gcr.io/$PROJECT_ID/${_IMAGE_NAME}:$SHORT_SHA'
+]
