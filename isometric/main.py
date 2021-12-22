@@ -79,4 +79,4 @@ while True:
     DISPLAYSURF.blit(background, (0, 0))
     render_tiles()
     pygame.display.flip()
-    FPSCLOCK.tick(1)
+    FPSCLOCK.tick(5)
