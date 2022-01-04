@@ -1,7 +1,12 @@
 #:kivy 2.0.0
 
-<SpaceNumbers>
+<SpaceNumbersGame>
+    canvas:
+        Rectangle:
+            pos: self.center
+            size: 10, 10
     Label:
-        font_size: 60
-        center_x: root.width * 3/4
-        top:
+        font_size: 50
+        center_x: root.width * 7/8
+        top: root.top
+        text: "9999"
