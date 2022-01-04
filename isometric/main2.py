@@ -30,10 +30,10 @@ main_dir = Path(__file__).parent
 wall = load_image(main_dir / "wall.png")
 grass = load_image(main_dir / "grass.png")
 
-width_n_height = np.asarray([wall.get_size()])
-x_offset = width_n_height[0] / 2
+width_n_height = np.asarray([wall.get_size()]) / 2
+x_offset = width_n_height[0]
 isometric_transformation = np.asarray([[1, -1], [0.5, 0.5]], dtype=np.float16)
-transform = isometric_transformation * width_n_height / 2
+transform = isometric_transformation * width_n_height
 inv_transform = np.linalg.inv(transform)  # inverse transform
 
 map_data = np.random.choice([0, 1], size=(15, 15)).tolist()
@@ -49,11 +49,11 @@ def render_tiles():
 
             # if i = x_m
 
-            # tileImage = wall if tile == 1 else grass
-            tileImage = grass
+            tileImage = wall if tile == 1 else grass
+            # tileImage = grass
 
             x, y = transform @ (np.asarray([i, j]))
-            x_delta = WIDTH / 2 - width_n_height[0][0] / 2
+            x_delta = WIDTH / 2 - width_n_height[0][0]
             DISPLAYSURF.blit(tileImage, (x + x_delta, y))  # display the actual tile
 
 

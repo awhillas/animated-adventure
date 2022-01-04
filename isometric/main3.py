@@ -3,12 +3,13 @@ from pathlib import Path
 
 import numpy as np
 import pygame
+from loguru import logger as log
 from pygame.locals import *
 
 pygame.init()
 
 DISPLAYSURF = pygame.display.set_mode(
-    (800, 600), DOUBLEBUF
+    (1024, 600), DOUBLEBUF
 )  # set the display mode, window title and FPS clock
 
 # Create The Backgound
@@ -40,10 +41,14 @@ TILEHEIGHT = 64
 TILEHEIGHT_HALF = TILEHEIGHT / 2
 TILEWIDTH_HALF = TILEWIDTH / 2
 
+MAP_DATA = np.random.choice([0, 1, 2, 3], size=(15, 15))
+
 
 def render_tiles():
-    map_data = np.random.choice([0, 1, 2, 3], size=(15, 15))
-    for row_nb, row in enumerate(map_data):  # for every row of the map...
+    Mouse_x, Mouse_y = pygame.mouse.get_pos()
+    log.debug("{}, {}", Mouse_x, Mouse_y)
+
+    for row_nb, row in enumerate(MAP_DATA):  # for every row of the map...
         for col_nb, tile in enumerate(row):
 
             if tile == 1:

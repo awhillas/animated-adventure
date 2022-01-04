@@ -1,3 +1,5 @@
 loguru
 pygame
 numpy
+kivy[base]
+kivy_examples
