@@ -1,12 +1,21 @@
 #:kivy 2.0.0
 
-<SpaceNumbersGame>
+<NaughtyBaddie>:
+    size: 50,50
     canvas:
-        Rectangle:
-            pos: self.center - 50
-            size: 100, 100
+        Ellipse:
+            pos: self.pos
+            size: self.size
+
+<SpaceNumbersGame>:
+    baddie: not_good
+
     Label:
         font_size: 30
         center_x: 60
         top: root.top
         text: "Level 1"
+
+    NaughtyBaddie:
+        id: not_good
+        center: self.parent.center
