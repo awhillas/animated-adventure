@@ -21,21 +21,34 @@ class NaughtyBaddie(Widget):
 
         self.pos = Vector(*self.velocity) + self.pos
 
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            print("clicked/touched", touch)
+            return True
+        return super().on_touch_down(touch)
+
 
 class SpaceNumbersGame(Widget):
-    baddie = ObjectProperty(None)
+    baddies = []
 
-    def start(self):
-        self.baddie.velocity = Vector(4, 0).rotate(randint(0, 360))
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        Clock.schedule_interval(self.spawn_baddie, 2.0)
+
+    def spawn_baddie(self, dt):
+        nb = NaughtyBaddie()
+        nb.velocity = Vector(randint(1, 6), 0).rotate(randint(0, 360))
+        self.baddies.append(nb)
+        self.add_widget(nb)
 
     def update(self, dt):
-        self.baddie.move()
+        for b in self.baddies:
+            b.move()
 
 
 class SpaceNumbersApp(App):
     def build(self):
         game = SpaceNumbersGame()
-        game.start()
         Clock.schedule_interval(game.update, 1.0 / 60.0)
         return game
 
