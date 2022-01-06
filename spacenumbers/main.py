@@ -1,91 +1,85 @@
-# Import the pygame module
-import random
+from random import randint, random
 
-import pygame
+from kivy.app import App
+from kivy.clock import Clock
+from kivy.graphics import Color
+from kivy.properties import (
+    ListProperty,
+    NumericProperty,
+    ObjectProperty,
+    ReferenceListProperty,
+)
+from kivy.uix.widget import Widget
+from kivy.vector import Vector
 
-# from enemys import Enemy
-from pygame.locals import K_ESCAPE, KEYDOWN, MOUSEBUTTONDOWN, MOUSEMOTION, QUIT
 
-pygame.init()
-clock = pygame.time.Clock()
+class NaughtyBaddie(Widget):
+    velocity_x = NumericProperty(0)
+    velocity_y = NumericProperty(0)
+    velocity = ReferenceListProperty(velocity_x, velocity_y)
+    colour = ListProperty([])
 
-# Define constants for the screen width and height
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+    def __init__(self, start_pos, **kwargs):
+        super().__init__(**kwargs)
+        self.pos = start_pos
+        self.colour = (random(), random(), random(), 0.8)
+
+    def move(self):
+        if (self.y < self.parent.y) or (self.top > self.parent.top):
+            self.velocity_y *= -1
+
+        if (self.x < self.parent.x) or (self.right > self.parent.right):
+            self.velocity_x *= -1
+
+        self.pos = Vector(*self.velocity) + self.pos
+
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            self.parent.remove(self)
+            return True
+        return super().on_touch_down(touch)
 
 
-class Enemy(pygame.sprite.Sprite):
-    def __init__(self):
-        super(Enemy, self).__init__()
-        self.surf = pygame.Surface((50, 50))
-        self.surf.fill((0, 0, 0))
-        self.rect = self.surf.get_rect(
-            center=(
-                random.randint(SCREEN_WIDTH + 20, SCREEN_WIDTH + 100),
-                random.randint(0, SCREEN_HEIGHT),
+class SpaceNumbersGame(Widget):
+    baddies = []
+    level = NumericProperty(1)
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        Clock.schedule_interval(self.spawn_baddie, 2.0)
+        Clock.schedule_interval(self.update, 1.0 / 60.0)
+
+    def spawn_baddie(self, dt):
+        padding = 50
+        nb = NaughtyBaddie(
+            start_pos=Vector(
+                randint(50, int(self.width) - padding),
+                randint(50, int(self.height) - padding),
             )
         )
-        self.speed = random.randint(2, 10)
+        nb.velocity = Vector(randint(1, 6), 0).rotate(randint(0, 360))
+        self.baddies.append(nb)
+        self.add_widget(nb)
 
-    # Move the sprite based on speed
-    # Remove the sprite when it passes the left edge of the screen
-    def update(self):
-        self.rect.move_ip(-self.speed, 0)
-        if self.rect.right < 0:
-            self.kill()
+    def update(self, dt):
+        for b in self.baddies:
+            b.move()
+
+    def remove(self, widget):
+        self.baddies.remove(widget)
+        self.remove_widget(widget)
 
 
-# Create the screen object
-# The size is determined by the constant SCREEN_WIDTH and SCREEN_HEIGHT
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+class GameLayout(Widget):
+    ...
 
-enemies = pygame.sprite.Group()
-all_sprites = pygame.sprite.Group()
 
-# Create a custom event for adding a new enemy
-ADDENEMY = pygame.USEREVENT + 1
-pygame.time.set_timer(ADDENEMY, 250)
+class SpaceNumbersApp(App):
+    def build(self):
+        game = GameLayout()
 
-# Main loop
-running = True
-while running:
-    clock.tick(30)
+        return game
 
-    # Look at every event in the queue
-    for event in pygame.event.get():
-        # Touch screen events
-        if event.type == MOUSEBUTTONDOWN or event.type == MOUSEMOTION:
-            x, y = event.pos
-            for e in enemies:
-                if e.rect.collidepoint(x, y):
-                    e.kill()
 
-        if event.type == KEYDOWN:
-            # Was it the Escape key? If so, stop the loop.
-            if event.key == K_ESCAPE:
-                running = False
-
-        # Did the user click the window close button? If so, stop the loop.
-        elif event.type == QUIT:
-            running = False
-
-        # Add a new enemy?
-        elif event.type == ADDENEMY:
-            # Create the new enemy and add it to sprite groups
-            new_enemy = Enemy()
-            enemies.add(new_enemy)
-            all_sprites.add(new_enemy)
-
-        # pressed_keys = pygame.key.get_pressed()
-
-    enemies.update()
-
-    # Fill the screen with white
-    screen.fill((255, 255, 255))
-
-    # Draw all sprites
-    for entity in all_sprites:
-        screen.blit(entity.surf, entity.rect)
-
-    # Flip everything to the display
-    pygame.display.flip()
+if __name__ == "__main__":
+    SpaceNumbersApp().run()

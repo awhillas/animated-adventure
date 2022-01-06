@@ -1,0 +1,46 @@
+#:kivy 2.0.0
+
+<NaughtyBaddie>:
+    size: 50,50
+    canvas:
+        Color:
+            rgba: self.colour
+        Ellipse:
+            pos: self.pos
+            size: self.size
+        # Color:
+        #     rgba: 1,0,0,0.3
+        # Rectangle:
+        #     pos: self.pos
+        #     size: self.size
+
+<GameLayout>:
+    # baddie: not_good
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        spacing: 5
+
+        Label:
+            font_size: 30
+            text: "Level 1"
+            size_hint: (1, 0.1)
+
+        SpaceNumbersGame:
+            level: 1
+            # size_hint: (4, 1)
+            canvas.before:
+                Color:
+                    rgba: 0,1,0,0.3
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        Button:
+            text: "1"
+            size_hint: (1, 0.1)
+            # canvas.before:
+            #     Color:
+            #         rgba: 0,0,1,0.5
+            #     Rectangle:
+            #         pos: self.pos
+            #         size: self.size
