@@ -12,6 +12,10 @@ class NaughtyBaddie(Widget):
     velocity_y = NumericProperty(0)
     velocity = ReferenceListProperty(velocity_x, velocity_y)
 
+    def __init__(self, start_pos, **kwargs):
+        super().__init__(**kwargs)
+        self.pos = start_pos
+
     def move(self):
         if (self.y < 0) or (self.top > self.parent.height):
             self.velocity_y *= -1
@@ -24,6 +28,7 @@ class NaughtyBaddie(Widget):
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
             print("clicked/touched", touch)
+            self.parent.remove(self)
             return True
         return super().on_touch_down(touch)
 
@@ -36,7 +41,11 @@ class SpaceNumbersGame(Widget):
         Clock.schedule_interval(self.spawn_baddie, 2.0)
 
     def spawn_baddie(self, dt):
-        nb = NaughtyBaddie()
+        nb = NaughtyBaddie(
+            start_pos=Vector(
+                randint(50, self.width - 50), randint(50, self.height - 50)
+            )
+        )
         nb.velocity = Vector(randint(1, 6), 0).rotate(randint(0, 360))
         self.baddies.append(nb)
         self.add_widget(nb)
@@ -44,6 +53,10 @@ class SpaceNumbersGame(Widget):
     def update(self, dt):
         for b in self.baddies:
             b.move()
+
+    def remove(self, widget):
+        self.baddies.remove(widget)
+        self.remove_widget(widget)
 
 
 class SpaceNumbersApp(App):
