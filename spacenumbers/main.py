@@ -1,10 +1,16 @@
 from random import randint, random
+from re import A
 
 from kivy.app import App
 from kivy.clock import Clock
+from kivy.core.text import Label as CoreLabel
 from kivy.graphics import Color
-from kivy.properties import (ListProperty, NumericProperty, ObjectProperty,
-                             ReferenceListProperty)
+from kivy.properties import (
+    ListProperty,
+    NumericProperty,
+    ObjectProperty,
+    ReferenceListProperty,
+)
 from kivy.uix.widget import Widget
 from kivy.vector import Vector
 
@@ -15,12 +21,16 @@ class NaughtyBaddie(Widget):
     velocity = ReferenceListProperty(velocity_x, velocity_y)
     colour = ListProperty([])
     value = NumericProperty(1)
+    texture = ObjectProperty(None)
 
     def __init__(self, start_pos, value, **kwargs):
         super().__init__(**kwargs)
         self.pos = start_pos
         self.value = value
         self.colour = (random(), random(), random(), 0.8)
+        label = CoreLabel(text=str(value), font_size=25, color=(1.0, 1.0, 1.0, 1.0))
+        label.refresh()
+        self.texture = label.texture
 
     def move(self):
         if (self.y < self.parent.y) or (self.top > self.parent.top):

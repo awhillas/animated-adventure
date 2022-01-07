@@ -2,19 +2,14 @@
 
 <NaughtyBaddie>:
     size: 50,50
+    texture: None
     canvas:
         Color:
             rgba: self.colour
         Ellipse:
+            texture: self.texture
             pos: self.pos
             size: self.size
-        # Color:
-        #     rgba: 1,0,0,0.3
-        # Rectangle:
-        #     pos: self.pos
-        #     size: self.size
-    Label:
-        text: str(self.parent.value)
 
 <GameLayout>:
 
