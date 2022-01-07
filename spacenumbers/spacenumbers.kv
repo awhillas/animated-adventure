@@ -13,6 +13,8 @@
         # Rectangle:
         #     pos: self.pos
         #     size: self.size
+    Label:
+        text: str(self.parent.value)
 
 <GameLayout>:
 
@@ -26,6 +28,7 @@
             orientation: "horizontal"
             size_hint: (1, 0.1)
             Label:
+                id: level
                 font_size: 30
                 text: "Level 1"
 
@@ -35,8 +38,8 @@
                 text: "0"
 
         SpaceNumbersGame:
-            level: 1
-            score: points
+            score_lbl: points
+            level_lbl: level
             # size_hint: (4, 1)
             canvas.before:
                 Color:

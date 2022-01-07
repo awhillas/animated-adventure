@@ -3,12 +3,8 @@ from random import randint, random
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.graphics import Color
-from kivy.properties import (
-    ListProperty,
-    NumericProperty,
-    ObjectProperty,
-    ReferenceListProperty,
-)
+from kivy.properties import (ListProperty, NumericProperty, ObjectProperty,
+                             ReferenceListProperty)
 from kivy.uix.widget import Widget
 from kivy.vector import Vector
 
@@ -18,6 +14,7 @@ class NaughtyBaddie(Widget):
     velocity_y = NumericProperty(0)
     velocity = ReferenceListProperty(velocity_x, velocity_y)
     colour = ListProperty([])
+    value = NumericProperty(1)
 
     def __init__(self, start_pos, value, **kwargs):
         super().__init__(**kwargs)
@@ -36,7 +33,7 @@ class NaughtyBaddie(Widget):
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
-            self.parent.score.text = str(int(self.parent.score.text) + self.value)
+            self.parent.add_to_score(self.value)
             self.parent.remove(self)
             return True
         return super().on_touch_down(touch)
@@ -44,12 +41,14 @@ class NaughtyBaddie(Widget):
 
 class SpaceNumbersGame(Widget):
     baddies = []
-    level = NumericProperty(1)
-    score = ObjectProperty(None)
+    score_lbl = ObjectProperty(None)
+    level_lbl = ObjectProperty(None)
+    score: int = 0
+    level: int = 1
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        Clock.schedule_interval(self.spawn_baddie, 2.0)
+        Clock.schedule_interval(self.spawn_baddie, 1.0)
         Clock.schedule_interval(self.update, 1.0 / 60.0)
 
     def spawn_baddie(self, dt):
@@ -61,7 +60,7 @@ class SpaceNumbersGame(Widget):
             ),
             value=randint(1, self.level),
         )
-        nb.velocity = Vector(randint(1, 6), 0).rotate(randint(0, 360))
+        nb.velocity = Vector(randint(2, 6), 0).rotate(randint(0, 360))
         self.baddies.append(nb)
         self.add_widget(nb)
 
@@ -72,6 +71,13 @@ class SpaceNumbersGame(Widget):
     def remove(self, widget):
         self.baddies.remove(widget)
         self.remove_widget(widget)
+
+    def add_to_score(self, amount: int):
+        self.score += amount
+        self.score_lbl.text = str(self.score)
+        if self.score >= self.level * 10:
+            self.level += 1
+            self.level_lbl.text = f"Level {self.level}"
 
 
 class GameLayout(Widget):
