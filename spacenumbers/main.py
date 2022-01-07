@@ -19,9 +19,10 @@ class NaughtyBaddie(Widget):
     velocity = ReferenceListProperty(velocity_x, velocity_y)
     colour = ListProperty([])
 
-    def __init__(self, start_pos, **kwargs):
+    def __init__(self, start_pos, value, **kwargs):
         super().__init__(**kwargs)
         self.pos = start_pos
+        self.value = value
         self.colour = (random(), random(), random(), 0.8)
 
     def move(self):
@@ -35,6 +36,7 @@ class NaughtyBaddie(Widget):
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
+            self.parent.score.text = str(int(self.parent.score.text) + self.value)
             self.parent.remove(self)
             return True
         return super().on_touch_down(touch)
@@ -43,6 +45,7 @@ class NaughtyBaddie(Widget):
 class SpaceNumbersGame(Widget):
     baddies = []
     level = NumericProperty(1)
+    score = ObjectProperty(None)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -55,7 +58,8 @@ class SpaceNumbersGame(Widget):
             start_pos=Vector(
                 randint(50, int(self.width) - padding),
                 randint(50, int(self.height) - padding),
-            )
+            ),
+            value=randint(1, self.level),
         )
         nb.velocity = Vector(randint(1, 6), 0).rotate(randint(0, 360))
         self.baddies.append(nb)

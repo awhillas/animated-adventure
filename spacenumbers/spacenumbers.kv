@@ -15,19 +15,28 @@
         #     size: self.size
 
 <GameLayout>:
-    # baddie: not_good
+
     BoxLayout:
         orientation: "vertical"
         size: root.width, root.height
         spacing: 5
 
-        Label:
-            font_size: 30
-            text: "Level 1"
+
+        BoxLayout:
+            orientation: "horizontal"
             size_hint: (1, 0.1)
+            Label:
+                font_size: 30
+                text: "Level 1"
+
+            Label:
+                id: points
+                font_size: 30
+                text: "0"
 
         SpaceNumbersGame:
             level: 1
+            score: points
             # size_hint: (4, 1)
             canvas.before:
                 Color:
