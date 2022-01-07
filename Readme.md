@@ -1,4 +1,5 @@
-# first
+# animated-adventure
+Some experiments with pygame
 
 ## Setup
 
