@@ -4,12 +4,15 @@
     size: 50,50
     texture: None
     canvas:
-        Color:
-            rgba: self.colour
+        Ellipse:
+            pos: self.pos
+            size: self.size
         Ellipse:
             texture: self.texture
             pos: self.pos
             size: self.size
+        Color:
+            rgba: self.colour
 
 <GameLayout>:
 
