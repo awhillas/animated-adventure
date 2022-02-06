@@ -28,6 +28,8 @@ class NaughtyBaddie(Widget):
         self.pos = start_pos
         self.value = value
         self.colour = (random(), random(), random(), 0.8)
+        # Create a number and set it as the texture
+        # from https://groups.google.com/g/kivy-users/c/zRCjfhBcX4c/m/G5WYz9SHFMUJ
         label = CoreLabel(text=str(value), font_size=25, color=(1.0, 1.0, 1.0, 1.0))
         label.refresh()
         self.texture = label.texture
@@ -85,7 +87,7 @@ class SpaceNumbersGame(Widget):
     def add_to_score(self, amount: int):
         self.score += amount
         self.score_lbl.text = str(self.score)
-        if self.score >= self.level * 10:
+        if self.score >= 2 ^ self.level * 10:
             self.level += 1
             self.level_lbl.text = f"Level {self.level}"
 
