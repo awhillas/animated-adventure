@@ -1,5 +1,10 @@
+Can't seem to get this to work in a sperate file but works when embedded in the main file?
+
 ---VERTEX SHADER---
 $HEADER$
+#ifdef GL_ES
+    precision highp float;
+#endif
 varying vec2 position;
 void main()
 {
@@ -12,6 +17,9 @@ void main()
 
 ---VERTEX SHADER---
 $HEADER$
+#ifdef GL_ES
+    precision highp float;
+#endif
 varying vec2 position;
 uniform int maxIterations;
 uniform float zoom;

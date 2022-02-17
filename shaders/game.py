@@ -1,3 +1,4 @@
+# See: https://stackoverflow.com/a/55603056/196732
 from __future__ import division
 
 import kivy
@@ -78,14 +79,13 @@ def load_atlas():
     for name, val in mapping.items():
         x0, y0, w, h = val
         x1, y1 = x0 + w, y0 + h
+
+        # fmt: off
         uvmap[name] = UVMapping(
-            x0 / tex_width,
-            1 - y1 / tex_height,
-            x1 / tex_width,
-            1 - y0 / tex_height,
-            0.5 * w,
-            0.5 * h,
-        )
+            x0 / tex_width, 1 - y1 / tex_height,
+            x1 / tex_width, 1 - y0 / tex_height,
+            0.5 * w, 0.5 * h)
+        # fmt: on
 
     return tex, uvmap
 
@@ -154,39 +154,14 @@ class GameScreen(Widget):
         for i in range(count, count + num):
             j = 4 * i
             self.indices.extend((j, j + 1, j + 2, j + 2, j + 3, j))
-
-            self.vertices.extend(
-                (
-                    0,
-                    0,
-                    1,
-                    -uv.su,
-                    -uv.sv,
-                    uv.u0,
-                    uv.v1,
-                    0,
-                    0,
-                    1,
-                    uv.su,
-                    -uv.sv,
-                    uv.u1,
-                    uv.v1,
-                    0,
-                    0,
-                    1,
-                    uv.su,
-                    uv.sv,
-                    uv.u1,
-                    uv.v0,
-                    0,
-                    0,
-                    1,
-                    -uv.su,
-                    uv.sv,
-                    uv.u0,
-                    uv.v0,
-                )
-            )
+            # fmt: off
+            self.vertices.extend((
+                0, 0, 1, -uv.su, -uv.sv, uv.u0, uv.v1,
+                0, 0, 1,  uv.su, -uv.sv, uv.u1, uv.v1,
+                0, 0, 1,  uv.su,  uv.sv, uv.u1, uv.v0,
+                0, 0, 1, -uv.su,  uv.sv, uv.u0, uv.v0,
+            ))
+            # fmt: on
 
             p = Ap(self, i)
             self.particles.append(p)

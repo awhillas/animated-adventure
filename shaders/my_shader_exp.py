@@ -4,7 +4,7 @@ from kivy.app import App
 from kivy.base import EventLoop
 from kivy.clock import Clock
 from kivy.core.window import Window
-from kivy.graphics import RenderContext
+from kivy.graphics import Rectangle, RenderContext
 from kivy.uix.image import Image
 from kivy.uix.widget import Widget
 
@@ -26,7 +26,9 @@ class CustomShaderWidget(Widget):
         )
         # self.canvas.shader.source = "shaders/my_shader_exp.glsl"
         self.canvas.shader.source = "shaders/crazy_dots.glsl"
-        super(CustomShaderWidget, self).__init__(**kwargs)
+        with self.canvas:
+            self.rect = Rectangle()
+        super().__init__(**kwargs)
 
         Clock.schedule_interval(self.update_glsl, 0)
 
